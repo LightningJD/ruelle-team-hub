@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ruelle Team Hub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111111;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --white: #f5f3ef;
+      --muted: #888;
+      --font: 'Georgia', serif;
+      --sans: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: var(--font);
+      font-size: 18px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+      font-family: var(--sans);
+    }
+
+    .nav-btn:hover { color: var(--white); background: var(--card); }
+    .nav-btn.active { color: var(--gold); background: var(--card); }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: var(--font);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: normal;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--gold); }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* PAGES */
+    .page { display: none; padding: 48px 24px; max-width: 860px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    /* SECTION HEADER */
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .role-tag {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-family: var(--font);
+      font-size: 36px;
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(201,168,76,0.12);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* STEPS */
+    .steps { display: grid; gap: 12px; }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+
+    .step-num {
+      min-width: 28px;
+      height: 28px;
+      background: var(--gold);
+      color: var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .step-content h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .step-content code {
+      background: #222;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--gold-light);
+    }
+
+    /* LISTS */
+    .list-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .list-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .list-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-card ul li {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .list-card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 12px;
+      top: 1px;
+    }
+
+    .list-card ul li strong {
+      color: var(--white);
+    }
+
+    /* APPROVAL BOX */
+    .approval-box {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    .approval-box h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .approval-box ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .approval-box ul li {
+      font-size: 14px;
+      color: var(--muted);
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .approval-box ul li::before {
+      content: '⚠';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 11px;
+      top: 2px;
+    }
+
+    /* PROMPTS */
+    .prompt-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .prompt {
+      background: #161616;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #aaa;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 36px 0 16px;
+    }
+
+    /* HOME PAGE */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .role-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .role-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .role-card .role-emoji { font-size: 28px; margin-bottom: 14px; display: block; }
+    .role-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .role-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .role-card .go { color: var(--gold); font-size: 13px; margin-top: 16px; display: block; }
+
+    /* TAGLINE */
+    .tagline {
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--muted);
+      font-family: var(--font);
+      font-style: italic;
+      font-size: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { gap: 4px; }
+      .nav-btn { padding: 8px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Ruelle</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home', this)">Home</button>
+    <button class="nav-btn" onclick="showPage('partnerships', this)">Partnerships</button>
+    <button class="nav-btn" onclick="showPage('creative', this)">Creative</button>
+    <button class="nav-btn" onclick="showPage('social', this)">Social</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="hero">
+    <div class="hero-tag">Team Hub</div>
+    <h1>There's power in<br><span>every testimony.</span></h1>
+    <p>Your guide to working with Jarvis — Ruelle's AI ops agent. Pick your role below to get started.</p>
+  </div>
+
+  <div class="role-grid">
+    <div class="role-card" onclick="showPage('partnerships', document.querySelectorAll('.nav-btn')[1])">
+      <span class="role-emoji">🤝</span>
+      <h3>Partnerships</h3>
+      <p>Outreach, proposals, brand collabs, and investor pipeline support.</p>
+      <span class="go">View guide →</span>
+    </div>
+    <div class="role-card" onclick="showPage('creative', document.querySelectorAll('.nav-btn')[2])">
+      <span class="role-emoji">✍️</span>
+      <h3>Creative</h3>
+      <p>Copy, campaigns, product drops, brand voice, and content strategy.</p>
+      <span class="go">View guide →</span>
+    </div>
+    <div class="role-card" onclick="showPage('social', document.querySelectorAll('.nav-btn')[3])">
+      <span class="role-emoji">📱</span>
+      <h3>Social</h3>
+      <p>Content calendar, captions, scheduling, and platform strategy.</p>
+      <span class="go">View guide →</span>
+    </div>
+  </div>
+
+  <div class="tagline">"There's power in every testimony."</div>
+</div>
+
+<!-- PARTNERSHIPS -->
+<div id="partnerships" class="page">
+  <div class="section-header">
+    <div class="role-tag">Role Guide</div>
+    <h2>Partnerships</h2>
+    <p>You own outreach, relationship-building, and brand collaboration for Ruelle. Jarvis is your research and drafting engine — you bring the relationships, Jarvis handles the prep work.</p>
+  </div>
+
+  <div class="section-title">Getting Started — Access Jarvis</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Download Telegram</h4>
+        <p>Free app, works on iPhone and Android. Just needs your phone number — no extra sign-ups.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Open your agent link</h4>
+        <p>Jordyn will send you a direct link to the Partnerships agent. Tap it, then hit <code>Start</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Introduce yourself</h4>
+        <p>Send your first message: <code>"Hi, I'm [name], Ruelle Partnerships."</code> Jarvis will confirm access and you're live.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">What You Own</div>
+  <div class="list-card">
+    <h3>Your Scope</h3>
+    <ul>
+      <li>Brand collaborations and influencer outreach</li>
+      <li>Church and ministry partnerships for Lightning + Ruelle</li>
+      <li>Wholesale and retail partner conversations</li>
+      <li>Investor and accelerator pipeline (Praxis, OCEAN, Techstars)</li>
+      <li>Tracking and following up on open conversations</li>
+    </ul>
+  </div>
+
+  <div class="section-title">What to Use Jarvis For</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📨</div>
+        <h3>Outreach Drafts</h3>
+      </div>
+      <p>Give Jarvis a name, their platform/brand, and what you want. Jarvis writes the first draft. You refine and send.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🔍</div>
+        <h3>Research</h3>
+      </div>
+      <p>Ask Jarvis to research a brand, creator, or organization before you reach out. Get background, audience size, alignment with Ruelle's mission.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <h3>Proposals & Decks</h3>
+      </div>
+      <p>Jarvis can draft partnership proposals, one-pagers, and talking points. Bring the deal idea — Jarvis builds the document.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <h3>Pipeline Tracking</h3>
+      </div>
+      <p>Tell Jarvis where each conversation stands. Jarvis keeps notes and reminds you when to follow up.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Example Prompts</div>
+  <div class="prompt-grid">
+    <div class="prompt">"Draft a cold outreach email to [creator name] about a Ruelle collab. They focus on Christian lifestyle content, ~50k followers on IG."</div>
+    <div class="prompt">"Research Praxis Accelerator — what do they look for, what's the application timeline, and what should Jordyn know before applying?"</div>
+    <div class="prompt">"Write a partnership one-pager for Ruelle targeting faith-based boutique retailers."</div>
+    <div class="prompt">"I had a call with [brand] today. Here's what we discussed: [notes]. What are the next steps and what should I follow up on?"</div>
+  </div>
+
+  <div class="section-title">Requires Jordyn's Approval</div>
+  <div class="approval-box">
+    <h3>Always get sign-off before:</h3>
+    <ul>
+      <li>Sending any external email or message on behalf of Ruelle</li>
+      <li>Making any commitment — financial, timeline, or deliverable</li>
+      <li>Sharing pricing, partnership terms, or brand assets</li>
+      <li>Reaching out to investors or accelerator programs</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Brand Rules — Never Use These Words</div>
+  <div class="list-card">
+    <h3>Off-Limits Vocabulary</h3>
+    <ul>
+      <li><strong>blessed</strong> — overused, feels performative</li>
+      <li><strong>amazing</strong> — generic filler</li>
+      <li><strong>iconic</strong> — not Ruelle's voice</li>
+      <li><strong>fire / lit / slay</strong> — not aligned with brand tone</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Weekly Rhythm</div>
+  <div class="list-card">
+    <h3>Cadence</h3>
+    <ul>
+      <li>Monday — Review open outreach threads, plan the week's contacts</li>
+      <li>Wednesday — Check in on any pending responses, send follow-ups</li>
+      <li>Friday — Update Jarvis on pipeline status so it carries into next week</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CREATIVE -->
+<div id="creative" class="page">
+  <div class="section-header">
+    <div class="role-tag">Role Guide</div>
+    <h2>Creative</h2>
+    <p>You own the words, campaigns, and product storytelling for Ruelle. Jarvis knows the brand voice inside out — use it to go faster without ever sounding generic.</p>
+  </div>
+
+  <div class="section-title">Getting Started — Access Jarvis</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Download Telegram</h4>
+        <p>Free app, works on iPhone and Android. Just needs your phone number.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Open your agent link</h4>
+        <p>Jordyn will send you a direct link to the Creative agent. Tap it, then hit <code>Start</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Introduce yourself</h4>
+        <p>Send: <code>"Hi, I'm [name], Ruelle Creative."</code> You're in.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">What You Own</div>
+  <div class="list-card">
+    <h3>Your Scope</h3>
+    <ul>
+      <li>Product copy — naming, descriptions, launch language</li>
+      <li>Campaign concepts and taglines</li>
+      <li>Email copy and newsletters</li>
+      <li>Brand voice consistency across all touchpoints</li>
+      <li>Creative briefs for designers, photographers, and videographers</li>
+    </ul>
+  </div>
+
+  <div class="section-title">What to Use Jarvis For</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">✏️</div>
+        <h3>Product Copy</h3>
+      </div>
+      <p>Describe the product — fabric, feel, story behind it — and Jarvis writes the copy. Grounded in Ruelle's voice: authentic, bold, spiritually rooted.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💡</div>
+        <h3>Campaign Concepts</h3>
+      </div>
+      <p>Tell Jarvis the drop, the season, the feeling you're going for. Get 3–5 concept directions to choose from.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📧</div>
+        <h3>Email Copy</h3>
+      </div>
+      <p>New product, sale, announcement — give Jarvis the facts and get a full email draft that sounds like Ruelle, not a brand newsletter.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎯</div>
+        <h3>Creative Briefs</h3>
+      </div>
+      <p>When you need to brief a photographer or designer, Jarvis builds the brief. You provide the vision, Jarvis documents it clearly.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Example Prompts</div>
+  <div class="prompt-grid">
+    <div class="prompt">"Write product copy for the Living Testimony Tee. It's a $29.99 heavyweight white tee. Feeling: bold, clean, statement piece for young Christians who aren't quiet about their faith."</div>
+    <div class="prompt">"Give me 5 campaign concept directions for a spring drop called 'New Creation.' Target: 16–30 year old Christians."</div>
+    <div class="prompt">"Write a product launch email for the Signature Collection jackets. Keep it short, bold, no hype language."</div>
+    <div class="prompt">"Write a creative brief for a product shoot — 3 looks, natural light, urban setting, faith-forward aesthetic."</div>
+  </div>
+
+  <div class="section-title">Requires Jordyn's Approval</div>
+  <div class="approval-box">
+    <h3>Always get sign-off before:</h3>
+    <ul>
+      <li>Publishing or sending any copy externally</li>
+      <li>Introducing a new tagline or campaign name</li>
+      <li>Changing product names or descriptions in Shopify</li>
+      <li>Any copy that touches faith/scripture — tone must be reviewed</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Brand Voice — The Rules</div>
+  <div class="list-card">
+    <h3>Ruelle Sounds Like</h3>
+    <ul>
+      <li><strong>Authentic</strong> — real stories, real faith, no performance</li>
+      <li><strong>Bold</strong> — says what it means, doesn't hedge</li>
+      <li><strong>Spiritually grounded</strong> — faith is the foundation, never the aesthetic</li>
+      <li><strong>Direct</strong> — short sentences, strong verbs, no filler</li>
+    </ul>
+  </div>
+  <div class="list-card">
+    <h3>Never Use</h3>
+    <ul>
+      <li>blessed, amazing, iconic, fire, slay, lit</li>
+      <li>Corporate or polished marketing language</li>
+      <li>Anything that sounds like a brand trying too hard</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Target Audience</div>
+  <div class="list-card">
+    <h3>Who You're Writing For</h3>
+    <ul>
+      <li>Age 16–30, Christian, not ashamed of their faith</li>
+      <li>They want clothing that means something — not just aesthetic</li>
+      <li>They've lived something. Their testimony is real.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SOCIAL -->
+<div id="social" class="page">
+  <div class="section-header">
+    <div class="role-tag">Role Guide</div>
+    <h2>Social</h2>
+    <p>You own Ruelle's presence on Instagram and beyond. Jarvis helps you plan, write, and stay consistent — so the feed always reflects the mission.</p>
+  </div>
+
+  <div class="section-title">Getting Started — Access Jarvis</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Download Telegram</h4>
+        <p>Free app, works on iPhone and Android. Just needs your phone number.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Open your agent link</h4>
+        <p>Jordyn will send you a direct link to the Social agent. Tap it, then hit <code>Start</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Introduce yourself</h4>
+        <p>Send: <code>"Hi, I'm [name], Ruelle Social."</code> You're in.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">What You Own</div>
+  <div class="list-card">
+    <h3>Your Scope</h3>
+    <ul>
+      <li>Instagram feed and stories (@ruelleclub)</li>
+      <li>Content calendar — weekly and monthly planning</li>
+      <li>Caption writing and hashtag strategy</li>
+      <li>Community engagement — comments, DMs, responses</li>
+      <li>Tracking what's performing and what's not</li>
+    </ul>
+  </div>
+
+  <div class="section-title">What to Use Jarvis For</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📅</div>
+        <h3>Content Calendar</h3>
+      </div>
+      <p>Tell Jarvis what's coming up — drops, events, seasons — and get a full week or month of post ideas mapped out.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">✍️</div>
+        <h3>Caption Writing</h3>
+      </div>
+      <p>Describe the photo or video and the vibe. Jarvis writes captions in Ruelle's voice — bold, real, never generic.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🔁</div>
+        <h3>Repurposing Content</h3>
+      </div>
+      <p>Have a blog post, email, or campaign? Tell Jarvis and get 3–5 social posts adapted from it.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💬</div>
+        <h3>Response Drafts</h3>
+      </div>
+      <p>Paste a DM or comment you're unsure how to respond to. Jarvis drafts a reply that's warm, on-brand, and human.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Example Prompts</div>
+  <div class="prompt-grid">
+    <div class="prompt">"Plan 5 Instagram posts for this week. We have a new product drop Wednesday — Living Testimony Tee. Rest of the week should support the launch."</div>
+    <div class="prompt">"Write a caption for a product photo of the white tee. Clean studio shot. Feeling: bold faith, simple statement."</div>
+    <div class="prompt">"We got a DM that says 'your brand is everything right now.' Write a reply that's warm and real without sounding like a bot."</div>
+    <div class="prompt">"Turn this email copy into 3 IG post ideas: [paste copy here]"</div>
+  </div>
+
+  <div class="section-title">Requires Jordyn's Approval</div>
+  <div class="approval-box">
+    <h3>Always get sign-off before:</h3>
+    <ul>
+      <li>Posting anything to the live @ruelleclub account</li>
+      <li>Responding to any sensitive DM or comment (complaints, controversy)</li>
+      <li>Announcing sales, drops, or collabs publicly</li>
+      <li>Tagging other brands or creators in posts</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Platform Notes</div>
+  <div class="list-card">
+    <h3>Instagram (@ruelleclub)</h3>
+    <ul>
+      <li>No markdown — plain text only in captions</li>
+      <li>Use line breaks for readability, not headers</li>
+      <li>Hashtags: 5–10 max, relevant, no spam tags</li>
+      <li>Stories can be more casual and behind-the-scenes</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Brand Voice Reminder</div>
+  <div class="list-card">
+    <h3>Never Use on Social</h3>
+    <ul>
+      <li>blessed, amazing, iconic, fire, slay, lit</li>
+      <li>Hype language or anything that sounds like an ad</li>
+      <li>Generic Christian clichés — be specific, be real</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
